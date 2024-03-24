@@ -1,0 +1,43 @@
+[
+    {
+        "url": "https://www.nanotek.lk",
+        "shop": "nanotek",
+        "category_path": "category",
+        "categories": [
+            {
+                "name": "cpu",
+                "path": "processors"
+            },
+            {
+                "name": "gpu",
+                "path": "graphic-cards"
+            }
+        ],
+        "block_selector": {
+            "name": "product-block",
+            "component": "div",
+            "tag_class": "ty-productBlock"
+        },
+        "product_selectors": [
+            {
+                "name": "name",
+                "component": "div",
+                "tag_class": "ty-productBlock-title"
+            },
+            {
+                "name": "price",
+                "component": "div",
+                "tag_class": "ty-productBlock-price-retail"
+            },
+            {
+                "name": "availability",
+                "component":"div",
+                "class": "ty-productBlock-specialMsg"
+            }
+        ],
+        "pagination_parameter": "page",
+        "rate_limit": 20,
+        "dynamic": false,
+        "max-pages": 10
+    }
+]
