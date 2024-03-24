@@ -4,6 +4,7 @@ from typing import List
 
 import aiohttp
 from aiolimiter import AsyncLimiter
+
 from schemas import Job
 
 
@@ -11,39 +12,39 @@ class Executor:
     def __init__(self, jobs: List[Job]) -> None:
         self.jobs = jobs
 
-    def _generate_urls(self, job: Job) -> None:
-        for category, page in itertools.product(
-            job.categories, range(1, job.max_pages + 1)
-        ):
-            job._urls.append(
-                f"{job.url}/{job.category_path}/{category.path}?{job.pagination_parameter}={page}"
+    @staticmethod
+    def generate_urls(job: Job) -> List[str]:
+        return [
+            f"{job.url}/{job.category_path}/{category.path}?{job.pagination_parameter}={page}"
+            for category, page in itertools.product(
+                job.categories, range(1, job.max_pages + 1)
             )
+        ]
 
-    async def _execute_job(self, job: Job):
-        self._generate_urls(job)
+    async def execute_job(self, job: Job):
+        urls = self.generate_urls(job)
 
-        limiter = AsyncLimiter(job.rate_limit - (job.rate_limit / 5), 1)
+        limiter = AsyncLimiter(job.rate_limit - (job.rate_limit / 5), time_period=1)
         semaphore = asyncio.Semaphore(job.rate_limit)
 
         tasks = []
 
-        async with aiohttp.ClientSession() as session:
-            for url in job._urls:
-                tasks.append(
-                    asyncio.ensure_future(
-                        self._download_html(limiter, semaphore, url, session)
-                    )
+        async with aiohttp.ClientSession(raise_for_status=True) as session:
+            tasks.extend(
+                asyncio.ensure_future(
+                    self.download_html(limiter, semaphore, url, session)
                 )
-
+                for url in urls
+            )
             results = await asyncio.gather(*tasks, return_exceptions=True)
 
         return results
 
     def run(self):
-        asyncio.run(self._execute_job(self.jobs[0]))
+        asyncio.run(self.execute_job(self.jobs[0]))
 
-    async def _download_html(
-        self,
+    @staticmethod
+    async def download_html(
         limiter: AsyncLimiter,
         semaphore: asyncio.Semaphore,
         url: str,
