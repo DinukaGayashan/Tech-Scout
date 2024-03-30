@@ -1,23 +1,10 @@
-import json
 from pathlib import Path
-from typing import List
 
 from executor import Executor
-from schemas import Job
-
-
-def get_jobs_from_config(path: Path) -> List[Job]:
-    with open(path, "r", encoding="utf-8") as scraper_config:
-        configs = json.load(scraper_config)
-
-    jobs = []
-    for config in configs:
-        jobs.append(Job(**config))
-
-    return jobs
-
+from utils import get_jobs_from_config
 
 if __name__ == "__main__":
-    jobs = get_jobs_from_config(path=Path("web-scraper/src/scraper_config.json"))
+    jobs = get_jobs_from_config(path=Path("web-scraper/scraper_config.json"))
     executor = Executor(jobs)
     executor.run()
+    print(executor.execution_results)

@@ -34,3 +34,18 @@ class Job(BaseModel):
     rate_limit: Optional[int] = 20  # Max concurrent requests
     dynamic: Optional[bool] = False
     max_pages: Optional[int] = 10
+
+
+class Page(BaseModel):
+    content: str | bytes
+    category: Category
+
+
+class PageCollection(BaseModel):
+    job: Job
+    pages: List[Page]
+
+
+class URL(BaseModel):
+    url: str
+    category: Category
