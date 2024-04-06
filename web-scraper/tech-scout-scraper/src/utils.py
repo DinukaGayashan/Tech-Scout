@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from typing import List
 
-from schemas import Job
+from .schemas import Job
 
 
 def get_jobs_from_config(path: Path) -> List[Job]:

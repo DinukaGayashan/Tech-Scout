@@ -30,10 +30,14 @@ class Job(BaseModel):
     categories: List[Category]
     block_selector: Selector
     product_selectors: List[Selector]
+    pagination_parameter_config: Optional[bool] = True
     pagination_parameter: Optional[str] = "page"
+    pagination_path_config: Optional[bool] = False
+    pagination_path: Optional[str] = "page"
     rate_limit: Optional[int] = 20  # Max concurrent requests
     dynamic: Optional[bool] = False
     max_pages: Optional[int] = 10
+
 
 
 class Page(BaseModel):
@@ -42,7 +46,6 @@ class Page(BaseModel):
 
 
 class PageCollection(BaseModel):
-    job: Job
     pages: List[Page]
 
 
