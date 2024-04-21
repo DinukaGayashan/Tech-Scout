@@ -1,18 +1,44 @@
 import asyncio
 import itertools
+import logging
+import os
+from datetime import datetime
 from http import HTTPStatus
 from typing import List
+from uuid import UUID, SafeUUID
 
 import aiohttp
 from aiolimiter import AsyncLimiter
+from pymongo import MongoClient
+from uvicorn.config import LOGGING_CONFIG
 
 from .html_parser import Parser
 from .schemas import URL, Job, Page, PageCollection
+
+LOGGING_CONFIG["loggers"][__name__] = {
+    "handlers": ["default"],
+    "level": "INFO",
+    "propagate": False,
+}
+
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = logging.getLogger(__name__)
 
 
 class Executor:
     def __init__(self, jobs: List[Job]) -> None:
         self.jobs = jobs
+        self.mongodb_client = MongoClient("mongodb://mongodb:27017")
+        self.db_name = "products"
+        self.collection_suffix = (
+            str(datetime.now().strftime("%Y-%m-%d-%H-%M"))
+            + "-"
+            + str(UUID(bytes=os.urandom(16), version=5, is_safe=SafeUUID.safe))[:8]
+        )
+        self.total_parsed_count = 0
+
+    def get_collection_name(self, shop: str) -> str:
+        return shop + "-" + self.collection_suffix
 
     @staticmethod
     def generate_urls(job: Job) -> List[URL]:
@@ -60,23 +86,19 @@ class Executor:
         return PageCollection(pages=filtered_results)
 
     def run(self) -> None:
-        products = []
         for job in self.jobs:
             results = asyncio.run(self.execute_job(job))
-            # pprint(results)
             parser = Parser(page_collection=results, job=job)
-            products.extend(parser.parse_products())
+            products = parser.parse_products()
+            self.total_parsed_count += len(products)
+            self.upload_parsed_products(products, self.get_collection_name(job.shop))
 
-        print(len(products))
-        from pymongo import MongoClient
+        logger.info(f"Total parsed product count: {self.total_parsed_count}")
 
-        client = MongoClient("mongodb://mongodb:27017")
-
-        db = client["products"]
-        db["nanotek"].delete_many({})
-        print(db["nanotek"].count_documents({}))
-        db["nanotek"].insert_many([dict(product) for product in products])
-        print(db["nanotek"].count_documents({}))
+    def upload_parsed_products(self, products, collection_name) -> None:
+        db = self.mongodb_client[self.db_name]
+        collection = db[collection_name]
+        collection.insert_many([dict(product) for product in products])
 
     @staticmethod
     async def download_html(
@@ -89,7 +111,7 @@ class Executor:
         async with limiter:
             async with session.get(url.url) as resp:
                 content = await resp.read()
-                print(f"GET - {url.url} - {resp.status}")
+                logger.info(f"GET - {url.url} - {resp.status}")
                 if resp.status == HTTPStatus.NOT_FOUND:
                     return -1
                 semaphore.release()
