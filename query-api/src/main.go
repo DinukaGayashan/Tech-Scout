@@ -41,7 +41,7 @@ func main() {
 
 	router := gin.Default()
 	for _, category := range config.Categories {
-		router.GET(category, getItems)
+		router.GET("query/"+category, getItems)
 	}
 	router.Run("localhost:8080")
 }
