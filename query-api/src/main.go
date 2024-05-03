@@ -1,13 +1,20 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
+
 	"net/http"
 	"os"
+
+	"github.com/go-sql-driver/mysql"
 
 	"github.com/gin-gonic/gin"
 	"gopkg.in/yaml.v3"
 )
+
+var db *sql.DB
 
 type Config struct {
 	Categories []string `yaml:"categories"`
@@ -38,6 +45,27 @@ func getItems(c *gin.Context) {
 func main() {
 	var config Config
 	config.getConfigs()
+
+	dbConfig := mysql.Config{
+		User:   "root",
+		Passwd: "root",
+		Net:    "tcp",
+		Addr:   "localhost:3306",
+		DBName: "items",
+	}
+
+	db, err := sql.Open("mysql", dbConfig.FormatDSN())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+	fmt.Println("DB Connected!")
+
+	defer db.Close()
 
 	router := gin.Default()
 	for _, category := range config.Categories {
