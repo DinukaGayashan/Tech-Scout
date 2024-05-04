@@ -14,10 +14,17 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var db *sql.DB
+type DBConfig struct {
+	User   string `yaml:"User"`
+	Passwd string `yaml:"Passwd"`
+	Net    string `yaml:"Net"`
+	Addr   string `yaml:"Addr"`
+	DBName string `yaml:"DBName"`
+}
 
 type Config struct {
 	Categories []string `yaml:"categories"`
+	DBConfig   DBConfig `yaml:"dbConfig"`
 }
 
 func (c *Config) getConfigs() *Config {
@@ -33,7 +40,11 @@ func (c *Config) getConfigs() *Config {
 }
 
 type Item struct {
-	Name string `json:"name"`
+	ID       string `json:"id"`
+	Category string `json:"category"`
+	Name     string `json:"name"`
+	Specs    string `json:"specs"`
+	Shops    string `json:"shops"`
 }
 
 func getItems(c *gin.Context) {
@@ -47,11 +58,11 @@ func main() {
 	config.getConfigs()
 
 	dbConfig := mysql.Config{
-		User:   "root",
-		Passwd: "root",
-		Net:    "tcp",
-		Addr:   "localhost:3306",
-		DBName: "items",
+		User:   config.DBConfig.User,
+		Passwd: config.DBConfig.Passwd,
+		Net:    config.DBConfig.Net,
+		Addr:   config.DBConfig.Addr,
+		DBName: config.DBConfig.DBName,
 	}
 
 	db, err := sql.Open("mysql", dbConfig.FormatDSN())
