@@ -7,4 +7,4 @@ dbConfig:
   Passwd: root
   Net: tcp
   Addr: localhost:3306
-  DBName: items
+  DBName: structured_data

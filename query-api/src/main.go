@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strings"
 
 	"net/http"
 	"os"
@@ -13,6 +14,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gopkg.in/yaml.v3"
 )
+
+var DB *sql.DB
 
 type DBConfig struct {
 	User   string `yaml:"User"`
@@ -27,6 +30,14 @@ type Config struct {
 	DBConfig   DBConfig `yaml:"dbConfig"`
 }
 
+type Item struct {
+	ID       int32  `json:"id"`
+	Category string `json:"category"`
+	Name     string `json:"name"`
+	Specs    string `json:"specs"`
+	Shops    string `json:"shops"`
+}
+
 func (c *Config) getConfigs() *Config {
 	yamlFile, err := os.ReadFile("config.yaml")
 	if err != nil {
@@ -39,17 +50,37 @@ func (c *Config) getConfigs() *Config {
 	return c
 }
 
-type Item struct {
-	ID       string `json:"id"`
-	Category string `json:"category"`
-	Name     string `json:"name"`
-	Specs    string `json:"specs"`
-	Shops    string `json:"shops"`
+func itemsByCategory(category string) ([]Item, error) {
+	var items []Item
+
+	rows, err := DB.Query("SELECT * FROM structured_data.items WHERE category = ?", category)
+	if err != nil {
+		return nil, fmt.Errorf("itemsByCategory %q: %v", category, err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var item Item
+		if err := rows.Scan(&item.ID, &item.Category, &item.Name, &item.Specs, &item.Shops); err != nil {
+			return nil, fmt.Errorf("itemsByCategory %q: %v", category, err)
+		}
+		items = append(items, item)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("itemsByCategory %q: %v", category, err)
+	}
+	return items, nil
 }
 
 func getItems(c *gin.Context) {
 	endpoint := c.Request.URL.Path
-	var items = []Item{{Name: endpoint}}
+	parts := strings.Split(endpoint, "/")
+	category := parts[2]
+	items, err := itemsByCategory(category)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	c.IndentedJSON(http.StatusOK, items)
 }
 
@@ -65,18 +96,18 @@ func main() {
 		DBName: config.DBConfig.DBName,
 	}
 
-	db, err := sql.Open("mysql", dbConfig.FormatDSN())
+	var err error
+	DB, err = sql.Open("mysql", dbConfig.FormatDSN())
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	pingErr := db.Ping()
+	pingErr := DB.Ping()
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
 	fmt.Println("DB Connected!")
-
-	defer db.Close()
+	defer DB.Close()
 
 	router := gin.Default()
 	for _, category := range config.Categories {
