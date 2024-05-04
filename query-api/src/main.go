@@ -16,13 +16,15 @@ import (
 )
 
 var DB *sql.DB
+var config Config
 
 type DBConfig struct {
-	User   string `yaml:"User"`
-	Passwd string `yaml:"Passwd"`
-	Net    string `yaml:"Net"`
-	Addr   string `yaml:"Addr"`
-	DBName string `yaml:"DBName"`
+	User      string `yaml:"User"`
+	Passwd    string `yaml:"Passwd"`
+	Net       string `yaml:"Net"`
+	Addr      string `yaml:"Addr"`
+	DBName    string `yaml:"DBName"`
+	TableName string `yaml:"TableName"`
 }
 
 type Config struct {
@@ -53,7 +55,7 @@ func (c *Config) getConfigs() *Config {
 func itemsByCategory(category string) ([]Item, error) {
 	var items []Item
 
-	rows, err := DB.Query("SELECT * FROM structured_data.items WHERE category = ?", category)
+	rows, err := DB.Query("SELECT * FROM "+config.DBConfig.DBName+"."+config.DBConfig.TableName+" WHERE category = ?", category)
 	if err != nil {
 		return nil, fmt.Errorf("itemsByCategory %q: %v", category, err)
 	}
@@ -85,7 +87,6 @@ func getItems(c *gin.Context) {
 }
 
 func main() {
-	var config Config
 	config.getConfigs()
 
 	dbConfig := mysql.Config{

@@ -8,3 +8,4 @@ dbConfig:
   Net: tcp
   Addr: localhost:3306
   DBName: structured_data
+  TableName: items
