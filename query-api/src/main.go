@@ -40,6 +40,12 @@ type Item struct {
 	Shops    string `json:"shops"`
 }
 
+type ItemRequestBody struct {
+	Name  string `json:"name"`
+	Specs string `json:"specs"`
+	Shops string `json:"shops"`
+}
+
 func (c *Config) getConfigs() *Config {
 	yamlFile, err := os.ReadFile("config.yaml")
 	if err != nil {
@@ -74,13 +80,67 @@ func itemsByCategory(category string) ([]Item, error) {
 	return items, nil
 }
 
+func itemsByQuerying(category string, itemRequestBody ItemRequestBody) ([]Item, error) {
+	query := "SELECT * FROM items WHERE category = ?"
+	args := []interface{}{}
+	args = append(args, category)
+
+	if itemRequestBody.Name != "" {
+		parts := strings.Split(itemRequestBody.Name, " ")
+		for _, j := range parts {
+			query += " AND name LIKE ?"
+			args = append(args, "%"+j+"%")
+		}
+	}
+	if itemRequestBody.Specs != "" {
+		parts := strings.Split(itemRequestBody.Specs, " ")
+		for _, j := range parts {
+			query += " AND specs LIKE ?"
+			args = append(args, "%"+j+"%")
+		}
+	}
+	if itemRequestBody.Shops != "" {
+		parts := strings.Split(itemRequestBody.Shops, " ")
+		for _, j := range parts {
+			query += " AND shops LIKE ?"
+			args = append(args, "%"+j+"%")
+		}
+	}
+
+	rows, _ := DB.Query(query, args...)
+	defer rows.Close()
+
+	var items []Item
+	for rows.Next() {
+		var item Item
+		rows.Scan(&item.ID, &item.Category, &item.Name, &item.Specs, &item.Shops)
+		items = append(items, item)
+	}
+	return items, nil
+}
+
 func getItems(c *gin.Context) {
 	endpoint := c.Request.URL.Path
 	parts := strings.Split(endpoint, "/")
 	category := parts[2]
-	items, err := itemsByCategory(category)
-	if err != nil {
-		log.Fatal(err)
+	var items []Item
+
+	if c.Request.Body == nil || c.Request.ContentLength == 0 {
+		var err error
+		items, err = itemsByCategory(category)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		var itemRequestBody ItemRequestBody
+		if err := c.BindJSON(&itemRequestBody); err != nil {
+			return
+		}
+		var err error
+		items, err = itemsByQuerying(category, itemRequestBody)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	c.IndentedJSON(http.StatusOK, items)
