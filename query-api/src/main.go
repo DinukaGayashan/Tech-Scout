@@ -58,28 +58,6 @@ func (c *Config) getConfigs() *Config {
 	return c
 }
 
-func itemsByCategory(category string) ([]Item, error) {
-	var items []Item
-
-	rows, err := DB.Query("SELECT * FROM "+config.DBConfig.DBName+"."+config.DBConfig.TableName+" WHERE category = ?", category)
-	if err != nil {
-		return nil, fmt.Errorf("itemsByCategory %q: %v", category, err)
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var item Item
-		if err := rows.Scan(&item.ID, &item.Category, &item.Name, &item.Specs, &item.Shops); err != nil {
-			return nil, fmt.Errorf("itemsByCategory %q: %v", category, err)
-		}
-		items = append(items, item)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("itemsByCategory %q: %v", category, err)
-	}
-	return items, nil
-}
-
 func itemsByQuerying(category string, itemRequestBody ItemRequestBody) ([]Item, error) {
 	query := "SELECT * FROM items WHERE category = ?"
 	args := []interface{}{}
@@ -125,22 +103,16 @@ func getItems(c *gin.Context) {
 	category := parts[2]
 	var items []Item
 
-	if c.Request.Body == nil || c.Request.ContentLength == 0 {
-		var err error
-		items, err = itemsByCategory(category)
-		if err != nil {
-			log.Fatal(err)
-		}
-	} else {
-		var itemRequestBody ItemRequestBody
+	var itemRequestBody ItemRequestBody
+	if c.Request.Body != nil && c.Request.ContentLength != 0 {
 		if err := c.BindJSON(&itemRequestBody); err != nil {
 			return
 		}
-		var err error
-		items, err = itemsByQuerying(category, itemRequestBody)
-		if err != nil {
-			log.Fatal(err)
-		}
+	}
+	var err error
+	items, err = itemsByQuerying(category, itemRequestBody)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	c.IndentedJSON(http.StatusOK, items)
