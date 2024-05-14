@@ -1,0 +1,18 @@
+server:
+  port: 9093
+
+spring:
+  main:
+    web-application-type: reactive
+
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: query-api
+          uri: http://localhost:8080
+          predicates:
+            - Path=/query/**
+
