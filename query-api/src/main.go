@@ -146,5 +146,5 @@ func main() {
 	for _, category := range config.Categories {
 		router.GET("query/"+category, getItems)
 	}
-	router.Run("localhost:8080")
+	router.Run("localhost:8001")
 }
