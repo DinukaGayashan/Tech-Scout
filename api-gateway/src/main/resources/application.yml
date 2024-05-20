@@ -1,5 +1,5 @@
 server:
-  port: 9093
+  port: 8080
 
 spring:
   main:
@@ -12,7 +12,7 @@ spring:
     gateway:
       routes:
         - id: query-api
-          uri: http://localhost:8080
+          uri: http://localhost:8001
           predicates:
             - Path=/query/**
 
