@@ -9,9 +9,10 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/go-sql-driver/mysql"
-
+	"github.com/ArthurHlt/go-eureka-client/eureka"
 	"github.com/gin-gonic/gin"
+
+	"github.com/go-sql-driver/mysql"
 	"gopkg.in/yaml.v3"
 )
 
@@ -56,6 +57,20 @@ func (c *Config) getConfigs() *Config {
 		log.Fatalf("Unmarshal: %v", err)
 	}
 	return c
+}
+
+func registerOnDiscovery() {
+	client := eureka.NewClient([]string{
+		"http://localhost:8761/eureka/",
+	})
+	instance := eureka.NewInstanceInfo("tech-scout.com", "query-api", "69.172.200.235", 8001, 30, false)
+	instance.Metadata = &eureka.MetaData{
+		Map: make(map[string]string),
+	}
+	client.RegisterInstance("query-api", instance)
+	client.GetApplication(instance.App)
+	client.GetInstance(instance.App, instance.HostName)
+	client.SendHeartbeat(instance.App, instance.HostName)
 }
 
 func itemsByQuerying(category string, itemRequestBody ItemRequestBody) ([]Item, error) {
@@ -141,6 +156,8 @@ func main() {
 	}
 	fmt.Println("DB Connected!")
 	defer DB.Close()
+
+	registerOnDiscovery()
 
 	router := gin.Default()
 	for _, category := range config.Categories {
