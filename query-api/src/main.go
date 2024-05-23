@@ -156,16 +156,19 @@ func main() {
 	// }
 	// fmt.Println("DB Connected!")
 	// defer DB.Close()
-	client := eureka.NewClient([]string{
-		"http://127.0.0.1:8761/eureka", //From a spring boot based eureka server
-		// add others servers here
-	})
-	instance := eureka.NewInstanceInfo("localhost", "query-api", "69.172.200.235", 8001, 30, false) //Create a new instance to register
+
+	// Initialize the Eureka client with server URL
+	client := eureka.NewClient([]string{"http://localhost:8761/eureka"})
+	fmt.Println("Printing Client Details..")
+	fmt.Println(client)
+
+	// eureka.NewInstanceInfo(hostname, appName, ipAddr, port, securePort, ttl, secure)
+	instance := eureka.NewInstanceInfo("localhost", "query-api", "127.0.0.1", 8001, 30, false) //Create a new instance to register
 	instance.Metadata = &eureka.MetaData{
 		Map: make(map[string]string),
 	}
 	instance.Metadata.Map["foo"] = "bar"                //add metadata for example
-	client.RegisterInstance("myapp", instance)          // Register new instance in your eureka(s)
+	client.RegisterInstance("query-api", instance)      // Register new instance in your eureka(s)
 	application, _ := client.GetApplications()          // Retrieves all applications from eureka server(s)
 	client.GetApplication(instance.App)                 // retrieve the application "test"
 	client.GetInstance(instance.App, instance.HostName) // retrieve the instance from "test.com" inside "test"" app
