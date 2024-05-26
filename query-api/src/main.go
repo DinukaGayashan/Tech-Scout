@@ -12,7 +12,7 @@ import (
 	"github.com/ArthurHlt/go-eureka-client/eureka"
 	"github.com/gin-gonic/gin"
 
-	// "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 	"gopkg.in/yaml.v3"
 )
 
@@ -58,20 +58,6 @@ func (c *Config) getConfigs() *Config {
 	}
 	return c
 }
-
-// func registerOnDiscovery() {
-// 	client := eureka.NewClient([]string{
-// 		"http://localhost:8761/eureka/",
-// 	})
-// 	instance := eureka.NewInstanceInfo("tech-scout.com", "query-api", "69.172.200.235", 8001, 30, false)
-// 	instance.Metadata = &eureka.MetaData{
-// 		Map: make(map[string]string),
-// 	}
-// 	client.RegisterInstance("query-api", instance)
-// 	client.GetApplication(instance.App)
-// 	client.GetInstance(instance.App, instance.HostName)
-// 	client.SendHeartbeat(instance.App, instance.HostName)
-// }
 
 func itemsByQuerying(category string, itemRequestBody ItemRequestBody) ([]Item, error) {
 	query := "SELECT * FROM items WHERE category = ?"
@@ -136,44 +122,33 @@ func getItems(c *gin.Context) {
 func main() {
 	config.getConfigs()
 
-	// dbConfig := mysql.Config{
-	// 	User:   config.DBConfig.User,
-	// 	Passwd: config.DBConfig.Passwd,
-	// 	Net:    config.DBConfig.Net,
-	// 	Addr:   config.DBConfig.Addr,
-	// 	DBName: config.DBConfig.DBName,
-	// }
-
-	// var err error
-	// DB, err = sql.Open("mysql", dbConfig.FormatDSN())
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// pingErr := DB.Ping()
-	// if pingErr != nil {
-	// 	log.Fatal(pingErr)
-	// }
-	// fmt.Println("DB Connected!")
-	// defer DB.Close()
-
-	// Initialize the Eureka client with server URL
-	client := eureka.NewClient([]string{"http://localhost:8761/eureka"})
-	fmt.Println("Printing Client Details..")
-	fmt.Println(client)
-
-	// eureka.NewInstanceInfo(hostname, appName, ipAddr, port, securePort, ttl, secure)
-	instance := eureka.NewInstanceInfo("localhost", "query-api", "127.0.0.1", 8001, 30, false) //Create a new instance to register
-	instance.Metadata = &eureka.MetaData{
-		Map: make(map[string]string),
+	dbConfig := mysql.Config{
+		User:   config.DBConfig.User,
+		Passwd: config.DBConfig.Passwd,
+		Net:    config.DBConfig.Net,
+		Addr:   config.DBConfig.Addr,
+		DBName: config.DBConfig.DBName,
 	}
-	instance.Metadata.Map["foo"] = "bar"                //add metadata for example
-	client.RegisterInstance("query-api", instance)      // Register new instance in your eureka(s)
-	application, _ := client.GetApplications()          // Retrieves all applications from eureka server(s)
-	client.GetApplication(instance.App)                 // retrieve the application "test"
-	client.GetInstance(instance.App, instance.HostName) // retrieve the instance from "test.com" inside "test"" app
+
+	var err error
+	DB, err = sql.Open("mysql", dbConfig.FormatDSN())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := DB.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+	fmt.Println("DB Connected!")
+	defer DB.Close()
+
+	client := eureka.NewClient([]string{"http://localhost:8761/eureka"})
+	instance := eureka.NewInstanceInfo("localhost", "query-api", "127.0.0.1", 8001, 30, false)
+	client.RegisterInstance("query-api", instance)
+	client.GetApplication(instance.App)
+	client.GetInstance(instance.App, instance.HostName)
 	client.SendHeartbeat(instance.App, instance.HostName)
-	fmt.Print(application)
 
 	router := gin.Default()
 	for _, category := range config.Categories {
