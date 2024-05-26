@@ -6,4 +6,4 @@ A distributed system for aggregating product details from tech websites, offerin
 ## Design
 The system is designed as a distributed system using the microservice architecture.
 
-![Alt text](https://raw.githubusercontent.com/DinukaGayashan/Tech-Scout/7480e4453bb019d703e6ccdb8bb2bd5ab3ba54bc/distributed-system-design.svg)
+![Alt text](https://raw.githubusercontent.com/DinukaGayashan/Tech-Scout/098e090cfad0b93ab23aec4ff3d9748fee0bbf0e/distributed-system-design.svg)
