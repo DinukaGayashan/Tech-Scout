@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 class Executor:
     def __init__(self, jobs: List[Job]) -> None:
         self.jobs = jobs
-        self.mongodb_client = MongoClient("mongodb://mongodb:27017")
+        self.mongodb_client = MongoClient()
         self.db_name = "products"
         self.collection_suffix = (
             str(datetime.now().strftime("%Y-%m-%d-%H-%M"))

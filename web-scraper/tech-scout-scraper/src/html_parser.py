@@ -1,8 +1,19 @@
+import logging
 from typing import List
 
 from selectolax.parser import HTMLParser, Node
+from uvicorn.config import LOGGING_CONFIG
 
 from .schemas import Job, Page, PageCollection, Product, Selector
+
+LOGGING_CONFIG["loggers"][__name__] = {
+    "handlers": ["default"],
+    "level": "INFO",
+    "propagate": False,
+}
+
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = logging.getLogger(__name__)
 
 
 class ParseError(Exception):
@@ -10,7 +21,6 @@ class ParseError(Exception):
 
 
 class Parser:
-
     def __init__(self, page_collection: PageCollection, job: Job) -> None:
         self.page_collection = page_collection
         self.products = []
@@ -25,13 +35,12 @@ class Parser:
         for page in self.page_collection.pages:
             self.parse_page(page=page)
         parsed_percentage = (self.total_products * 100) / self.total_blocks
-        print(f"Total Blocks: {self.total_blocks}", end=" | ")
-        print(f"Total Products: {self.total_products}", end=" | ")
-        print(f"Percentage: {parsed_percentage}%")
+        logger.info(f"Total Blocks: {self.total_blocks}")
+        logger.info(f"Total Products: {self.total_products}")
+        logger.info(f"Percentage: {parsed_percentage}%")
         return self.products
 
     def parse_page(self, page: Page) -> None:
-
         html = HTMLParser(page.content)
         blocks = html.css(
             f"{self.job.block_selector.component}.{self.job.block_selector.tag_class}"

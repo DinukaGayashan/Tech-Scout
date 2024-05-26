@@ -21,10 +21,10 @@ WORKDIR /tech-scout
 COPY --from=builder /tech-scout/wheels /wheels
 COPY --from=builder /tech-scout/requirements.txt .
 
-RUN pip install --no-cache /wheels/*
+RUN pip install -U --no-cache /wheels/*
 
 COPY tech-scout-scraper .
 
 EXPOSE 8000
 
-CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["fastapi", "dev", "src/app.py"]

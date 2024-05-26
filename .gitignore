@@ -5,3 +5,6 @@ build
 dist
 *.egg-info
 venv
+chromedriver-linux64
+pc-part-picker-dump
+.env
