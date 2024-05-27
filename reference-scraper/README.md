@@ -52,6 +52,8 @@ Details related to every product received from scraping are stored in the databa
 
 Undetected chrome-driver has been used to avoid the IP getting banned from 'PCPartPicker' website.
 
+A sample of the CPU data scraped from 'PCPartPicker' is shown in cpu_data_sample.csv file
+
 
 
 
