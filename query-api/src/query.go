@@ -73,6 +73,43 @@ func queryByShops(items []Item, shop string) ([]Item, error) {
 	return result, nil
 }
 
+func queryByPrice(items []Item, maxPrice float64, minPrice float64) ([]Item, error) {
+	var result []Item
+
+	for _, item := range items {
+		var data map[string]json.RawMessage
+		json.Unmarshal(item.Shops, &data)
+
+		var list []json.RawMessage
+		for key, value := range data {
+			var shopDetails map[string]interface{}
+			json.Unmarshal(value, &shopDetails)
+			var maxTrue bool = false
+			var minTrue bool = false
+			if maxPrice != 0 && shopDetails["price"].(float64) <= maxPrice {
+				maxTrue = true
+			}
+			if minPrice != 0 && shopDetails["price"].(float64) >= minPrice {
+				minTrue = true
+			}
+			if (maxPrice == 0 || maxTrue) && (minPrice == 0 || minTrue) {
+				shopMap := map[string]json.RawMessage{
+					key: value,
+				}
+				shopJSON, _ := json.Marshal(shopMap)
+				list = append(list, shopJSON)
+			}
+		}
+		if len(list) > 0 {
+			shops, _ := json.Marshal(list)
+			item.Shops = shops
+			result = append(result, item)
+		}
+	}
+
+	return result, nil
+}
+
 func itemsByQuerying(category string, itemRequestBody ItemRequestBody) ([]Item, error) {
 	query := "SELECT * FROM items WHERE category = ?"
 	args := []interface{}{}
@@ -96,6 +133,9 @@ func itemsByQuerying(category string, itemRequestBody ItemRequestBody) ([]Item, 
 	}
 	if itemRequestBody.Shops != "" {
 		items, _ = queryByShops(items, strings.ToLower(itemRequestBody.Shops))
+	}
+	if itemRequestBody.MaxPrice != 0 || itemRequestBody.MinPrice != 0 {
+		items, _ = queryByPrice(items, itemRequestBody.MaxPrice, itemRequestBody.MinPrice)
 	}
 
 	return items, nil

@@ -46,8 +46,8 @@ type ItemRequestBody struct {
 	Name     string  `json:"name"`
 	Specs    string  `json:"specs"`
 	Shops    string  `json:"shops"`
-	MinPrice float32 `json:"minPrice"`
-	MaxPrice float32 `json:"maxPrice"`
+	MinPrice float64 `json:"minPrice"`
+	MaxPrice float64 `json:"maxPrice"`
 }
 
 func (c *Config) getConfigs() *Config {
