@@ -41,30 +41,22 @@ func queryByShops(items []Item, shop string) ([]Item, error) {
 		var data map[string]json.RawMessage
 		json.Unmarshal(item.Shops, &data)
 
-		var list []json.RawMessage
+		availableShops := make(map[string]json.RawMessage)
 		for key, value := range data {
 			if strings.Contains(strings.ToLower(key), shop) {
-				shopMap := map[string]json.RawMessage{
-					key: value,
-				}
-				shopJSON, _ := json.Marshal(shopMap)
-				list = append(list, shopJSON)
+				availableShops[key] = value
 			} else {
 				var shopDetails map[string]interface{}
 				json.Unmarshal(value, &shopDetails)
 				for _, v := range shopDetails {
 					if str, ok := v.(string); ok && strings.Contains(strings.ToLower(str), shop) {
-						shopMap := map[string]json.RawMessage{
-							key: value,
-						}
-						shopJSON, _ := json.Marshal(shopMap)
-						list = append(list, shopJSON)
+						availableShops[key] = value
 					}
 				}
 			}
 		}
-		if len(list) > 0 {
-			shops, _ := json.Marshal(list)
+		if len(availableShops) > 0 {
+			shops, _ := json.Marshal(availableShops)
 			item.Shops = shops
 			result = append(result, item)
 		}
@@ -80,7 +72,7 @@ func queryByPrice(items []Item, maxPrice float64, minPrice float64) ([]Item, err
 		var data map[string]json.RawMessage
 		json.Unmarshal(item.Shops, &data)
 
-		var list []json.RawMessage
+		availableShops := make(map[string]json.RawMessage)
 		for key, value := range data {
 			var shopDetails map[string]interface{}
 			json.Unmarshal(value, &shopDetails)
@@ -93,15 +85,11 @@ func queryByPrice(items []Item, maxPrice float64, minPrice float64) ([]Item, err
 				minTrue = true
 			}
 			if (maxPrice == 0 || maxTrue) && (minPrice == 0 || minTrue) {
-				shopMap := map[string]json.RawMessage{
-					key: value,
-				}
-				shopJSON, _ := json.Marshal(shopMap)
-				list = append(list, shopJSON)
+				availableShops[key] = value
 			}
 		}
-		if len(list) > 0 {
-			shops, _ := json.Marshal(list)
+		if len(availableShops) > 0 {
+			shops, _ := json.Marshal(availableShops)
 			item.Shops = shops
 			result = append(result, item)
 		}
