@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strings"
@@ -34,17 +35,19 @@ type Config struct {
 }
 
 type Item struct {
-	ID       int32  `json:"id"`
-	Category string `json:"category"`
-	Name     string `json:"name"`
-	Specs    string `json:"specs"`
-	Shops    string `json:"shops"`
+	ID       int32           `json:"id"`
+	Category string          `json:"category"`
+	Name     string          `json:"name"`
+	Specs    json.RawMessage `json:"specs"`
+	Shops    json.RawMessage `json:"shops"`
 }
 
 type ItemRequestBody struct {
-	Name  string `json:"name"`
-	Specs string `json:"specs"`
-	Shops string `json:"shops"`
+	Name     string  `json:"name"`
+	Specs    string  `json:"specs"`
+	Shops    string  `json:"shops"`
+	MinPrice float32 `json:"minPrice"`
+	MaxPrice float32 `json:"maxPrice"`
 }
 
 func (c *Config) getConfigs() *Config {
