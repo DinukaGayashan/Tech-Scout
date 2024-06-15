@@ -118,7 +118,7 @@ func getItems(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, items)
 }
 
-func discoveryInit() {
+func registerOnDiscovery() {
 	config := consulAPI.DefaultConfig()
 	client, err := consulAPI.NewClient(config)
 	if err != nil {
@@ -161,7 +161,7 @@ func main() {
 	fmt.Println("DB Connected!")
 	defer DB.Close()
 
-	discoveryInit()
+	registerOnDiscovery()
 
 	router := gin.Default()
 	for _, category := range config.Categories {
