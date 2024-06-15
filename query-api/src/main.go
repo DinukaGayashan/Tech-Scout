@@ -12,7 +12,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-sql-driver/mysql"
-	consulAPI "github.com/hashicorp/consul/api"
 	"gopkg.in/yaml.v3"
 )
 
@@ -82,25 +81,6 @@ func getItems(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, items)
 }
 
-func registerOnDiscovery() {
-	config := consulAPI.DefaultConfig()
-	client, err := consulAPI.NewClient(config)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	registration := &consulAPI.AgentServiceRegistration{
-		ID:      "query-api",
-		Name:    "query-api",
-		Address: "localhost",
-		Port:    8001,
-	}
-	err = client.Agent().ServiceRegister(registration)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func main() {
 	config.getConfigs()
 
@@ -125,11 +105,13 @@ func main() {
 	fmt.Println("DB Connected!")
 	defer DB.Close()
 
-	registerOnDiscovery()
-
 	router := gin.Default()
 	for _, category := range config.Categories {
 		router.GET("query/"+category, getItems)
 	}
+	router.GET("health", func(c *gin.Context) {
+		c.String(http.StatusOK, "OK")
+	})
+
 	router.Run("localhost:8001")
 }
