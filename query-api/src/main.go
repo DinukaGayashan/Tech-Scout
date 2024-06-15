@@ -9,10 +9,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/ArthurHlt/go-eureka-client/eureka"
 	"github.com/gin-gonic/gin"
-
 	"github.com/go-sql-driver/mysql"
+	consulAPI "github.com/hashicorp/consul/api"
 	"gopkg.in/yaml.v3"
 )
 
@@ -57,20 +56,6 @@ func (c *Config) getConfigs() *Config {
 		log.Fatalf("Unmarshal: %v", err)
 	}
 	return c
-}
-
-func registerOnDiscovery() {
-	client := eureka.NewClient([]string{
-		"http://localhost:8761/eureka/",
-	})
-	instance := eureka.NewInstanceInfo("tech-scout.com", "query-api", "69.172.200.235", 8001, 30, false)
-	instance.Metadata = &eureka.MetaData{
-		Map: make(map[string]string),
-	}
-	client.RegisterInstance("query-api", instance)
-	client.GetApplication(instance.App)
-	client.GetInstance(instance.App, instance.HostName)
-	client.SendHeartbeat(instance.App, instance.HostName)
 }
 
 func itemsByQuerying(category string, itemRequestBody ItemRequestBody) ([]Item, error) {
@@ -131,6 +116,25 @@ func getItems(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusOK, items)
+}
+
+func registerOnDiscovery() {
+	config := consulAPI.DefaultConfig()
+	client, err := consulAPI.NewClient(config)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	registration := &consulAPI.AgentServiceRegistration{
+		ID:      "query-api",
+		Name:    "query-api",
+		Address: "localhost",
+		Port:    8001,
+	}
+	err = client.Agent().ServiceRegister(registration)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {
