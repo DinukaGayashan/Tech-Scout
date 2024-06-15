@@ -42,20 +42,14 @@ class Parser:
 
     def parse_page(self, page: Page) -> None:
         html = HTMLParser(page.content)
-        blocks = html.css(
-            f"{self.job.block_selector.component}.{self.job.block_selector.tag_class}"
-        )
+        blocks = html.css(f"{self.job.block_selector.component}.{self.job.block_selector.tag_class}")
         total_blocks = len(blocks)
         self.total_blocks += total_blocks
         if total_blocks == 0:
             return []
         for block in blocks:
             product = self.parse_product(block, page.category.name)
-            if (
-                product.name == "NameNotFound"
-                or product.price == -1
-                or product.link == "NoURLFound"
-            ):
+            if product.name == "NameNotFound" or product.price == -1 or product.link == "NoURLFound":
                 continue
             self.products.append(product)
 
@@ -95,11 +89,7 @@ class Parser:
     def parse_price(block: Node, selector: Selector) -> int:
         css_selector = f"{selector.component}.{selector.tag_class}"
         matches = {
-            int(
-                float(
-                    match.text(strip=True).lower().replace(",", "").replace("lkr", "")
-                )
-            )
+            int(float(match.text(strip=True).lower().replace(",", "").replace("lkr", "")))
             for match in block.css(css_selector)
         }
         if not matches:
@@ -122,9 +112,7 @@ class Parser:
         if len(matches) != 1:
             raise ParseError("Contains more than 1 matches")
 
-        availability_message = (
-            matches[0].text(strip=True).lower().replace(" ", "").replace("-", "")
-        )
+        availability_message = matches[0].text(strip=True).lower().replace(" ", "").replace("-", "")
         if "instock" in availability_message:
             return True
         if "outofstock" in availability_message:
@@ -139,9 +127,7 @@ class Parser:
         if selector.tag_class == "":
             css_selector = f"{selector.component}"
 
-        matches = {
-            match.attributes["href"].strip() for match in block.css(css_selector)
-        }
+        matches = {match.attributes["href"].strip() for match in block.css(css_selector)}
 
         if not matches:
             return "NoURLFound"

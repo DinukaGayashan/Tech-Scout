@@ -43,9 +43,7 @@ class Executor:
     @staticmethod
     def generate_urls(job: Job) -> List[URL]:
         urls = []
-        for category, page in itertools.product(
-            job.categories, range(1, job.max_pages + 1)
-        ):
+        for category, page in itertools.product(job.categories, range(1, job.max_pages + 1)):
             if job.pagination_path_config:
                 urls.append(
                     URL(
@@ -74,12 +72,7 @@ class Executor:
         tasks = []
 
         async with aiohttp.ClientSession(raise_for_status=False) as session:
-            tasks.extend(
-                asyncio.ensure_future(
-                    self.download_html(limiter, semaphore, url, session)
-                )
-                for url in urls
-            )
+            tasks.extend(asyncio.ensure_future(self.download_html(limiter, semaphore, url, session)) for url in urls)
             results = await asyncio.gather(*tasks, return_exceptions=True)
 
         filtered_results = [result for result in results if not isinstance(result, int)]
