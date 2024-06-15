@@ -61,20 +61,6 @@ func (c *Config) getConfigs() *Config {
 	return c
 }
 
-func registerOnDiscovery() {
-	client := eureka.NewClient([]string{
-		"http://localhost:8761/eureka/",
-	})
-	instance := eureka.NewInstanceInfo("tech-scout.com", "query-api", "69.172.200.235", 8001, 30, false)
-	instance.Metadata = &eureka.MetaData{
-		Map: make(map[string]string),
-	}
-	client.RegisterInstance("query-api", instance)
-	client.GetApplication(instance.App)
-	client.GetInstance(instance.App, instance.HostName)
-	client.SendHeartbeat(instance.App, instance.HostName)
-}
-
 func getItems(c *gin.Context) {
 	endpoint := c.Request.URL.Path
 	parts := strings.Split(endpoint, "/")
