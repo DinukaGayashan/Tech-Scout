@@ -1,0 +1,8 @@
+__pycache__
+.idea
+.vscode
+build
+dist
+*.egg-info
+venv
+discovery-server/target

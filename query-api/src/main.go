@@ -10,10 +10,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/ArthurHlt/go-eureka-client/eureka"
 	"github.com/gin-gonic/gin"
-
 	"github.com/go-sql-driver/mysql"
+	consulAPI "github.com/hashicorp/consul/api"
 	"gopkg.in/yaml.v3"
 )
 
@@ -95,6 +94,25 @@ func getItems(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusOK, items)
+}
+
+func registerOnDiscovery() {
+	config := consulAPI.DefaultConfig()
+	client, err := consulAPI.NewClient(config)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	registration := &consulAPI.AgentServiceRegistration{
+		ID:      "query-api",
+		Name:    "query-api",
+		Address: "localhost",
+		Port:    8001,
+	}
+	err = client.Agent().ServiceRegister(registration)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {
