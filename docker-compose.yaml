@@ -1,26 +1,24 @@
+version: '3'
+
 services:
-  mongodb:
-    image: mongodb/mongodb-enterprise-server:4.4.16-ubuntu2004
+#  web:
+#    build:
+#      context: query-api
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8001:8001"
+#    depends_on:
+#      - "database"
+#    networks:
+#      - "mynet"
+
+  database:
+    image: "mysql:latest"
+    container_name: "db-mysql"
     ports:
-      - "27017:27017"
-    networks:
-      - mongodb
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "structured_data"
+      MYSQL_ROOT_PASSWORD: "root"
     volumes:
-      - mongodb-data:/data/db
-  
-  tech-scout-scraper:
-    build:
-      context: ./web-scraper
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    networks:
-      - mongodb
-    depends_on:
-      - mongodb
-
-volumes:
-  mongodb-data:
-
-networks:
-  mongodb:
+      - "./resources/db.sql:/docker-entrypoint-initdb.d/db.sql"
