@@ -1,8 +1,19 @@
+import logging
 from typing import List
 
 from selectolax.parser import HTMLParser, Node
+from uvicorn.config import LOGGING_CONFIG
 
 from .schemas import Job, Page, PageCollection, Product, Selector
+
+LOGGING_CONFIG["loggers"][__name__] = {
+    "handlers": ["default"],
+    "level": "INFO",
+    "propagate": False,
+}
+
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = logging.getLogger(__name__)
 
 
 class ParseError(Exception):
@@ -10,7 +21,6 @@ class ParseError(Exception):
 
 
 class Parser:
-
     def __init__(self, page_collection: PageCollection, job: Job) -> None:
         self.page_collection = page_collection
         self.products = []
@@ -25,28 +35,21 @@ class Parser:
         for page in self.page_collection.pages:
             self.parse_page(page=page)
         parsed_percentage = (self.total_products * 100) / self.total_blocks
-        print(f"Total Blocks: {self.total_blocks}", end=" | ")
-        print(f"Total Products: {self.total_products}", end=" | ")
-        print(f"Percentage: {parsed_percentage}%")
+        logger.info(f"Total Blocks: {self.total_blocks}")
+        logger.info(f"Total Products: {self.total_products}")
+        logger.info(f"Percentage: {parsed_percentage}%")
         return self.products
 
     def parse_page(self, page: Page) -> None:
-
         html = HTMLParser(page.content)
-        blocks = html.css(
-            f"{self.job.block_selector.component}.{self.job.block_selector.tag_class}"
-        )
+        blocks = html.css(f"{self.job.block_selector.component}.{self.job.block_selector.tag_class}")
         total_blocks = len(blocks)
         self.total_blocks += total_blocks
         if total_blocks == 0:
             return []
         for block in blocks:
             product = self.parse_product(block, page.category.name)
-            if (
-                product.name == "NameNotFound"
-                or product.price == -1
-                or product.link == "NoURLFound"
-            ):
+            if product.name == "NameNotFound" or product.price == -1 or product.link == "NoURLFound":
                 continue
             self.products.append(product)
 
@@ -86,11 +89,7 @@ class Parser:
     def parse_price(block: Node, selector: Selector) -> int:
         css_selector = f"{selector.component}.{selector.tag_class}"
         matches = {
-            int(
-                float(
-                    match.text(strip=True).lower().replace(",", "").replace("lkr", "")
-                )
-            )
+            int(float(match.text(strip=True).lower().replace(",", "").replace("lkr", "")))
             for match in block.css(css_selector)
         }
         if not matches:
@@ -113,9 +112,7 @@ class Parser:
         if len(matches) != 1:
             raise ParseError("Contains more than 1 matches")
 
-        availability_message = (
-            matches[0].text(strip=True).lower().replace(" ", "").replace("-", "")
-        )
+        availability_message = matches[0].text(strip=True).lower().replace(" ", "").replace("-", "")
         if "instock" in availability_message:
             return True
         if "outofstock" in availability_message:
@@ -130,9 +127,7 @@ class Parser:
         if selector.tag_class == "":
             css_selector = f"{selector.component}"
 
-        matches = {
-            match.attributes["href"].strip() for match in block.css(css_selector)
-        }
+        matches = {match.attributes["href"].strip() for match in block.css(css_selector)}
 
         if not matches:
             return "NoURLFound"

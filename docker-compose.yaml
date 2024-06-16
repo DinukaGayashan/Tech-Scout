@@ -8,16 +8,16 @@ services:
     volumes:
       - mongodb-data:/data/db
   
-  tech-scout-scraper:
-    build:
-      context: ./web-scraper
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    networks:
-      - mongodb
-    depends_on:
-      - mongodb
+  # tech-scout-scraper:
+  #   build:
+  #     context: ./web-scraper
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8000:8000"
+  #   networks:
+  #     - mongodb
+  #   depends_on:
+  #     - mongodb
 
 volumes:
   mongodb-data:

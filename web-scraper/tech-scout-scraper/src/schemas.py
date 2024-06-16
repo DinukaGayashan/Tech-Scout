@@ -39,7 +39,6 @@ class Job(BaseModel):
     max_pages: Optional[int] = 10
 
 
-
 class Page(BaseModel):
     content: str | bytes
     category: Category
