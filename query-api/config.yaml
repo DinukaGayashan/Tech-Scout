@@ -1,3 +1,11 @@
 categories:
   - cpu
   - gpu
+
+dbConfig:
+  User: root
+  Passwd: root
+  Net: tcp
+  Addr: localhost:3306
+  DBName: structured_data
+  TableName: items

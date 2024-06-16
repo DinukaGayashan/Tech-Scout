@@ -8,3 +8,5 @@ venv
 chromedriver-linux64
 pc-part-picker-dump
 .env
+
+discovery-server/target

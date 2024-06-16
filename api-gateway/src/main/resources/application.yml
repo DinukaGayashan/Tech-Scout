@@ -1,18 +1,34 @@
 server:
-  port: 9093
+  port: 8080
 
 spring:
-  main:
-    web-application-type: reactive
-
   application:
     name: api-gateway
 
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
       routes:
         - id: query-api
-          uri: http://localhost:8080
+          uri: lb://query-api
           predicates:
             - Path=/query/**
 
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        enabled: true
+        register: true
+        preferIpAddress: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
