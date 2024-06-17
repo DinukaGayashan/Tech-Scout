@@ -3,13 +3,13 @@
         {
             "id": "api-gateway",
             "name": "api-gateway",
-            "address": "http://localhost",
+            "address": "localhost",
             "port": 8080
         },
         {
             "id": "query-api",
             "name": "query-api",
-            "address": "http://localhost",
+            "address": "localhost",
             "port": 8001
         }
     ]
