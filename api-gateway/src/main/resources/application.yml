@@ -16,19 +16,19 @@ spring:
           predicates:
             - Path=/query/**
 
-    consul:
-      host: localhost
-      port: 8500
-      discovery:
-        enabled: true
-        register: true
-        preferIpAddress: true
+#    consul:
+#      host: localhost
+#      port: 8500
+#      discovery:
+#        enabled: true
+#        register: true
+#        preferIpAddress: true
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health
-  endpoint:
-    health:
-      show-details: always
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health
+#  endpoint:
+#    health:
+#      show-details: always

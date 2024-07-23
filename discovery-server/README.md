@@ -2,19 +2,18 @@
 
 Here [Consul](https://www.consul.io/) is configured as the discovery server.
 
+Configuring the server with the services, it serves the API Gateway to direct requests to the relavant service.
+
 Follow the steps to configure Consul with Docker. Make sure you have [Docker](https://www.docker.com/) installed.
 
-1. Pull the Docker image:
+1. Run the Docker image:
     ```bash
-    docker pull consul:1.15.4
+    docker run -d --name=discovery-server -p 8500:8500 -v .:/ds consul:1.15.4
     ```
 
-2. Run Consul:
+2. Run Discovery Server with configs:
     ```bash
-    docker run -d -p 8500:8500 -p 8600:8600/udp --name=badger consul:1.15.4 agent -server -ui -node=server-1 -bootstrap-expec t=1 -client=0.0.0.0
+    docker exec discovery-server consul services register ds/service-registry.json
     ```
 
-
-
-
-
+Consul UI can be accessed via [http://localhost:8500/ui](http://localhost:8500/ui/dc1/services).
