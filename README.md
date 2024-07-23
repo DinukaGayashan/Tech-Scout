@@ -96,9 +96,12 @@ The application leverages
 - **GitHub Repository**: [https://github.com/DinukaGayashan/Tech-Scout](https://github.com/DinukaGayashan/Tech-Scout)
 - **Development Challenges**: Faced issues with service discovery and load balancing. Solved by configuring Eureka and Zuul properly. Encountered data consistency issues, resolved through transaction management and data validation.
 
+
 ## References
-- [Netflix Eureka](https://github.com/Netflix/eureka)
-- [Netflix Zuul](https://github.com/Netflix/zuul)
-- [Spring Cloud Netflix](https://spring.io/projects/spring-cloud-netflix)
-- [Docker Documentation](https://docs.docker.com/)
+- [Spring Cloud Gateway](https://spring.io/projects/spring-cloud-gateway)
+- [Consul](https://www.consul.io/)
+- [Go Gin Gonic](https://pkg.go.dev/github.com/gin-gonic/gin)
+- [Python](https://www.python.org/)
+- [Beautiful Soup](https://beautiful-soup-4.readthedocs.io/en/latest/)
+- [Docker](https://docs.docker.com/)
 - [Postman](https://www.postman.com/)
