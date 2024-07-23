@@ -15,3 +15,5 @@ Follow the steps to configure Consul with Docker. Make sure you have [Docker](ht
     ```bash
     docker exec discovery-server consul services register ds/service-registry.json
     ```
+
+Consul UI can be accessed via [http://localhost:8500/ui](http://localhost:8500/ui/dc1/services).
