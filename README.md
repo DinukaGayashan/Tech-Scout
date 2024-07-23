@@ -84,14 +84,14 @@ The application leverages
 4. Access the UI at `http://localhost:3000`
 
 ### Cloud Deployment
-1. Set up a cloud environment (e.g., AWS, Azure, GCP).
-2. Deploy Docker containers using the provided Dockerfile.
-3. Configure the environment variables and networking.
-4. Use a cloud-based service registry and API gateway.
+1. Set up a VM in a cloud environment (AWS, GCP, Azure)
+2. Export necessary ports to public
+3. Install Docker
+4. Run the system with Docker compose
 
 
 ## Source Code
-- **GitHub Repository**: [Repository Link](https://github.com/DinukaGayashan/Tech-Scout)
+- **GitHub Repository**: [https://github.com/DinukaGayashan/Tech-Scout](https://github.com/DinukaGayashan/Tech-Scout)
 - **Development Challenges**: Faced issues with service discovery and load balancing. Solved by configuring Eureka and Zuul properly. Encountered data consistency issues, resolved through transaction management and data validation.
 
 ## References
