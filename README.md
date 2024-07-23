@@ -29,37 +29,39 @@ The application leverages
 #### Reference Data Scraper
 - **Functionality**: Scrapes reference data from predefined sources.
 - **API Endpoints**:
-  - `GET /reference-data`: Fetch all reference data.
-  - `POST /reference-data`: Add new reference data.
-  - `PUT /reference-data/{id}`: Update existing reference data.
-  - `DELETE /reference-data/{id}`: Delete reference data.
+  - `POST /scrape-all`: Start scraping.
+  - `GET /get-all?category={category}`: Retrieve reference data.
+  - `GET /status`: Service status.
+  - `DELETE /delete-data/{time}`: Delete reference data.
 - **Inter-service Interactions**: Communicates with the Authorization service for access control.
 
 #### Data Scraper
 - **Functionality**: Scrapes raw data from various sources.
 - **API Endpoints**:
-  - `GET /scraped-data`: Fetch all scraped data.
-  - `POST /scrape`: Initiate a new data scrape.
-  - `PUT /scraped-data/{id}`: Update scraped data.
-  - `DELETE /scraped-data/{id}`: Delete scraped data.
+  - `POST /process`: Start website scraping.
+  - `GET /data?category={category}`: Initiate a new data scrape.
+  - `GET /status`: Service status.
+  - `DELETE /delete-data/{time}`: Delete scraped data.
 - **Inter-service Interactions**: Interacts with Authorization and Data Processor services.
 
-#### Data Processor (Product Matching)
+#### Data Processor
 - **Functionality**: Processes scraped data to match products and structure it.
 - **API Endpoints**:
   - `POST /process`: Start processing data.
-  - `GET /processed-data`: Fetch processed data.
-  - `PUT /processed-data/{id}`: Update processed data.
-  - `DELETE /processed-data/{id}`: Delete processed data.
+  - `POST /push`: Push processed data.
+  - `GET /status`: Service status.
+  - `DELETE /delete-data/{time}`: Delete processed data.
 - **Inter-service Interactions**: Consumes data from Data Scraper and Reference Data Scraper services.
 
 #### Query API
 - **Functionality**: Provides access to structured data.
 - **API Endpoints**:
-  - `GET /query`: Query structured data.
-  - `POST /query`: Execute a new query.
-  - `PUT /query/{id}`: Update an existing query.
-  - `DELETE /query/{id}`: Delete a query.
+  - `GET /query/{category}`: Query structured data.
+  - `GET /query-by-name/{category}`: Query structured data by name.
+  - `GET /query-by-spec/{category}`: Query structured data by spec.
+  - `GET /query-by-shop/{category}`: Query structured data by shop.
+  - `GET /query-by-price/{category}`: Query structured data by price.
+  - `GET /status`: Service status.
 - **Inter-service Interactions**: Retrieves data from the Data Processor.
 
 ### Discovery Server
