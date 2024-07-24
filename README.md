@@ -57,10 +57,7 @@ The application leverages microservice architecture to ensure scalability, maint
 - **Functionality**: Provides access to structured data.
 - **API Endpoints**:
   - `GET /query/{category}`: Query structured data by category.
-  - `GET /query/{category}`: Query structured data by category and name.
-  - `GET /query/{category}`: Query structured data by category and spec.
-  - `GET /query/{category}`: Query structured data by category and shop.
-  - `GET /query/{category}`: Query structured data by category and price.
+  - `GET /query/{category}`: Query structured data by category and with any combination of name, spec, shop, price.
   - `GET /status`: Service status.
 - **Inter-service Interactions**: Retrieves data from the Data Processor.
 
