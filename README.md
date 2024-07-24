@@ -92,7 +92,7 @@ These are the specific query endpoints available in the Query API:
 | Query by name          | GET         | /query-by-name/{category}   | name (string)                                      |
 | Query by spec          | GET         | /query-by-spec/{category}   | spec (string)                                      |
 | Query by shop          | GET         | /query-by-shop/{category}   | shop (string)                                      |
-| Query by price         | GET         | /query-by-price/{category}  | min_price (float), max_price (float)               |
+| Query by price         | GET         | /query-by-price/{category}  | minPrice (float), maxPrice (float)               |
 | Service status         | GET         | /status                     | -                                                  |
 
 
