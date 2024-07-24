@@ -12,7 +12,7 @@ The application is split into different services to ensure modularity, scalabili
 
 - **Reference Data Scraper**: Collects reference data.
 - **Data Scraper**: Collects raw data from various sources.
-- **Data Processor**: Matches products and structures data.
+- **Data Processor**: Matches raw product data and reference product data.
 - **Query API**: Provides access to the structured data.
 - **API Gateway**: Central entry point for external requests.
 - **Discovery Server**: Manages service discovery.
@@ -28,7 +28,7 @@ The application leverages microservice architecture to ensure scalability, maint
 - **Functionality**: Scrapes reference data from predefined sources.
 - **API Endpoints**:
   - `POST /scrape-all`: Start scraping.
-  - `GET /get-all?category={category}`: Retrieve reference data.
+  - `GET /get-all?category={category}`: Retrieve reference data for a specific category.
   - `GET /status`: Service status.
   - `DELETE /delete-data/{time}`: Delete reference data.
 - **Inter-service Interactions**: Communicates with the Authorization service for access control.
@@ -37,7 +37,7 @@ The application leverages microservice architecture to ensure scalability, maint
 - **Functionality**: Scrapes raw data from various sources.
 - **API Endpoints**:
   - `POST /process`: Start website scraping.
-  - `GET /data?category={category}`: Initiate a new data scrape.
+  - `GET /data?category={category}`: Initiate a new data scrape for a specific category.
   - `GET /status`: Service status.
   - `DELETE /delete-data/{time}`: Delete scraped data.
 - **Inter-service Interactions**: Interacts with Authorization and Data Processor services.
@@ -124,3 +124,6 @@ These are the specific query endpoints available in the Query API:
 - [Beautiful Soup](https://beautiful-soup-4.readthedocs.io/en/latest/)
 - [Docker](https://docs.docker.com/)
 - [Postman](https://www.postman.com/)
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [OpenAI API](https://platform.openai.com/docs/api-reference/introduction)
+

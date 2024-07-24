@@ -1,0 +1,5 @@
+uv
+setuptools
+build
+wheel
+black

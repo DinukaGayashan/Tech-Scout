@@ -1,0 +1,103 @@
+[
+    {
+        "url": "https://redtech.lk",
+        "shop": "redtech",
+        "category_path": "product-category",
+        "categories": [
+            {
+                "name": "gpu",
+                "path": "gpu"
+            },
+            {
+                "name": "cpu",
+                "path": "processors"
+            }
+        ],
+        "block_selector": {
+            "name": "product-block",
+            "component": "li",
+            "tag_class": "product"
+        },
+        "product_selectors": [
+            {
+                "name": "name",
+                "component": "h2",
+                "tag_class": "woocommerce-loop-product__title"
+            },
+            {
+                "name": "price",
+                "component": "span",
+                "tag_class": "amount"
+            },
+            {
+                "name": "availability",
+                "component": "div",
+                "tag_class": "berocket_better_labels_position_left"
+            },
+            {
+                "name": "link",
+                "component": "a",
+                "tag_class": "woocommerce-loop-product__link"
+            }
+        ],
+        "pagination_path_config": true,
+        "pagination_path": "page",
+        "rate_limit": 20,
+        "dynamic": false,
+        "max-pages": 10
+    },
+    {
+        "url": "https://www.nanotek.lk",
+        "shop": "nanotek",
+        "category_path": "category",
+        "categories": [
+            {
+                "name": "cpu",
+                "path": "processors"
+            },
+            {
+                "name": "gpu",
+                "path": "graphic-cards"
+            },
+            {
+                "name": "memory",
+                "path": "memory-ram"
+            },
+            {
+                "name": "motherboard",
+                "path": "motherboards"
+            }
+        ],
+        "block_selector": {
+            "name": "product-block",
+            "component": "li",
+            "tag_class": "ty-catPage-productListItem"
+        },
+        "product_selectors": [
+            {
+                "name": "name",
+                "component": "div",
+                "tag_class": "ty-productBlock-title"
+            },
+            {
+                "name": "price",
+                "component": "h2",
+                "tag_class": "ty-productBlock-price-retail"
+            },
+            {
+                "name": "availability",
+                "component": "div",
+                "tag_class": "ty-productBlock-specialMsg"
+            },
+            {
+                "name": "link",
+                "component": "a",
+                "tag_class": ""
+            }
+        ],
+        "pagination_parameter": "page",
+        "rate_limit": 20,
+        "dynamic": false,
+        "max-pages": 10
+    }
+]
