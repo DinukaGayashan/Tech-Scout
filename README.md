@@ -56,8 +56,11 @@ The application leverages microservice architecture to ensure scalability, maint
 #### Query API
 - **Functionality**: Provides access to structured data.
 - **API Endpoints**:
-  - `GET /query/{category}`: Query structured data by category.
-  - `GET /query/{category}`: Query structured data by category and with any combination of name, spec, shop, price.
+  - `GET /query/{category}`: Query structured data by category or with any combination of name, spec, shop, price.
+  - `GET /query-by-name/{category}`: Query structured data by name.
+  - `GET /query-by-spec/{category}`: Query structured data by spec.
+  - `GET /query-by-shop/{category}`: Query structured data by shop.
+  - `GET /query-by-price/{category}`: Query structured data by price.
   - `GET /status`: Service status.
 - **Inter-service Interactions**: Retrieves data from the Data Processor.
 
@@ -85,14 +88,14 @@ Key tools and libraries used for the implementation include:
 ### Query Endpoints
 These are the specific query endpoints available in the Query API:
 
-| Name                   | HTTP Method | Endpoint URL                | Body Parameters                             |
-|------------------------|-------------|-----------------------------|---------------------------------------------|
-| Query by category      | GET         | /query/{category}           | -                                           |
-| Query by name          | GET         | /query/{category}           | name (string)                               |
-| Query by spec          | GET         | /query/{category}           | spec (string)                               |
-| Query by shop          | GET         | /query/{category}           | shop (string)                               |
-| Query by price         | GET         | /query/{category}           | min_price (float), max_price (float)        |
-| Service status         | GET         | /status                     | -                                           |
+| Name                   | HTTP Method | Endpoint URL                | Body Parameters                                    |
+|------------------------|-------------|-----------------------------|----------------------------------------------------|
+| Query by category      | GET         | /query/{category}           | empty or any combination of name, spec, shop, price|
+| Query by name          | GET         | /query-by-name/{category}   | name (string)                                      |
+| Query by spec          | GET         | /query-by-spec/{category}   | spec (string)                                      |
+| Query by shop          | GET         | /query-by-shop/{category}   | shop (string)                                      |
+| Query by price         | GET         | /query-by-price/{category}  | min_price (float), max_price (float)               |
+| Service status         | GET         | /status                     | -                                                  |
 
 
 ## Deployment
