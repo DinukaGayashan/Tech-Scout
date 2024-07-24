@@ -12,7 +12,7 @@ The application is split into different services to ensure modularity, scalabili
 
 - **Reference Data Scraper**: Collects reference data.
 - **Data Scraper**: Collects raw data from various sources.
-- **Data Processor**: Matches products and structures data.
+- **Data Processor**: Matches raw product data and reference product data.
 - **Query API**: Provides access to the structured data.
 - **Authorization**: Manages access control across the system.
 - **API Gateway**: Central entry point for external requests.
@@ -30,7 +30,7 @@ The application leverages microservice architecture to ensure scalability, maint
 - **Functionality**: Scrapes reference data from predefined sources.
 - **API Endpoints**:
   - `POST /scrape-all`: Start scraping.
-  - `GET /get-all?category={category}`: Retrieve reference data.
+  - `GET /get-all?category={category}`: Retrieve reference data for a specific category.
   - `GET /status`: Service status.
   - `DELETE /delete-data/{time}`: Delete reference data.
 - **Inter-service Interactions**: Communicates with the Authorization service for access control.
@@ -39,7 +39,7 @@ The application leverages microservice architecture to ensure scalability, maint
 - **Functionality**: Scrapes raw data from various sources.
 - **API Endpoints**:
   - `POST /process`: Start website scraping.
-  - `GET /data?category={category}`: Initiate a new data scrape.
+  - `GET /data?category={category}`: Initiate a new data scrape for a specific category.
   - `GET /status`: Service status.
   - `DELETE /delete-data/{time}`: Delete scraped data.
 - **Inter-service Interactions**: Interacts with Authorization and Data Processor services.
@@ -56,11 +56,11 @@ The application leverages microservice architecture to ensure scalability, maint
 #### Query API
 - **Functionality**: Provides access to structured data.
 - **API Endpoints**:
-  - `GET /query/{category}`: Query structured data by category.
-  - `GET /query/{category}`: Query structured data by category and name.
-  - `GET /query/{category}`: Query structured data by category and spec.
-  - `GET /query/{category}`: Query structured data by category and shop.
-  - `GET /query/{category}`: Query structured data by category and price.
+  - `GET /query/{category}`: Query structured data by category or with any combination of name, spec, shop, price.
+  - `GET /query-by-name/{category}`: Query structured data by name.
+  - `GET /query-by-spec/{category}`: Query structured data by spec.
+  - `GET /query-by-shop/{category}`: Query structured data by shop.
+  - `GET /query-by-price/{category}`: Query structured data by price.
   - `GET /status`: Service status.
 - **Inter-service Interactions**: Retrieves data from the Data Processor.
 
@@ -88,14 +88,14 @@ Key tools and libraries used for the implementation include:
 ### Query Endpoints
 These are the specific query endpoints available in the Query API:
 
-| Name                   | HTTP Method | Endpoint URL                | Body Parameters                             |
-|------------------------|-------------|-----------------------------|---------------------------------------------|
-| Query by category      | GET         | /query/{category}           | -                                           |
-| Query by name          | GET         | /query/{category}           | name (string)                               |
-| Query by spec          | GET         | /query/{category}           | spec (string)                               |
-| Query by shop          | GET         | /query/{category}           | shop (string)                               |
-| Query by price         | GET         | /query/{category}           | min_price (float), max_price (float)        |
-| Service status         | GET         | /status                     | -                                           |
+| Name                   | HTTP Method | Endpoint URL                | Body Parameters                                    |
+|------------------------|-------------|-----------------------------|----------------------------------------------------|
+| Query by category      | GET         | /query/{category}           | empty or any combination of name, spec, shop, price|
+| Query by name          | GET         | /query-by-name/{category}   | name (string)                                      |
+| Query by spec          | GET         | /query-by-spec/{category}   | spec (string)                                      |
+| Query by shop          | GET         | /query-by-shop/{category}   | shop (string)                                      |
+| Query by price         | GET         | /query-by-price/{category}  | min_price (float), max_price (float)               |
+| Service status         | GET         | /status                     | -                                                  |
 
 
 ## Deployment
@@ -126,3 +126,6 @@ These are the specific query endpoints available in the Query API:
 - [Beautiful Soup](https://beautiful-soup-4.readthedocs.io/en/latest/)
 - [Docker](https://docs.docker.com/)
 - [Postman](https://www.postman.com/)
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [OpenAI API](https://platform.openai.com/docs/api-reference/introduction)
+
