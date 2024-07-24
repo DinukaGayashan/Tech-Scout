@@ -11,6 +11,18 @@
             "name": "query-api",
             "address": "localhost",
             "port": 8001
+        },
+        {
+            "id": "product-matcher",
+            "name": "product-matcher",
+            "address": "localhost",
+            "port": 8002
+        },
+        {
+            "id": "web-scraper",
+            "name": "web-scraper",
+            "address": "localhost",
+            "port": 8003
         }
     ]
 }

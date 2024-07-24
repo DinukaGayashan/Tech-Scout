@@ -1,6 +1,7 @@
+import time
+
 from fastapi import BackgroundTasks, FastAPI
 from pymongo import MongoClient
-import time
 
 app = FastAPI()
 
@@ -27,8 +28,7 @@ def download_scrape_data(host: str = "localhost", port: int = 27017):
     scrape_data_status = True
 
 
-def download_reference_data():
-    NotImplementedError
+def download_reference_data(): ...
 
 
 @app.post("/download")

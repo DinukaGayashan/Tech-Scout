@@ -1,3 +1,12 @@
+.PHONY: run-system
+run-system:
+	make -C discovery-server run-discovery-server
+	make -C api-gateway run-api-gateway
+	make -C product-matcher run-product-matcher
+	make -C web-scraper run-scraper
+	make -C query-api run-query-api
+	
+	
 .PHONY: setup-dev-web-scraper
 setup-dev-web-scraper:
 	python -m venv venv && \
