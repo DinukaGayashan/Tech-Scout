@@ -1,0 +1,8 @@
+aiohttp
+aiolimiter
+pydantic
+pymongo
+selectolax
+fastapi
+python-multipart
+uvicorn

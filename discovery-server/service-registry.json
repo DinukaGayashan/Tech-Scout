@@ -1,0 +1,16 @@
+{
+    "services": [
+        {
+            "id": "api-gateway",
+            "name": "api-gateway",
+            "address": "localhost",
+            "port": 8080
+        },
+        {
+            "id": "query-api",
+            "name": "query-api",
+            "address": "localhost",
+            "port": 8001
+        }
+    ]
+}

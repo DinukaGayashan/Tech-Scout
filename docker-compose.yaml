@@ -1,0 +1,26 @@
+services:
+  mongodb:
+    image: mongodb/mongodb-enterprise-server:4.4.16-ubuntu2004
+    ports:
+      - "27017:27017"
+    networks:
+      - mongodb
+    volumes:
+      - mongodb-data:/data/db
+  
+  # tech-scout-scraper:
+  #   build:
+  #     context: ./web-scraper
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8000:8000"
+  #   networks:
+  #     - mongodb
+  #   depends_on:
+  #     - mongodb
+
+volumes:
+  mongodb-data:
+
+networks:
+  mongodb:
