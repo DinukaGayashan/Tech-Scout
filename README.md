@@ -14,10 +14,8 @@ The application is split into different services to ensure modularity, scalabili
 - **Data Scraper**: Collects raw data from various sources.
 - **Data Processor**: Matches products and structures data.
 - **Query API**: Provides access to the structured data.
-- **Authorization**: Manages access control across the system.
 - **API Gateway**: Central entry point for external requests.
 - **Discovery Server**: Manages service discovery.
-- **Logging & Monitoring**: Ensures system health and performance.
 
 
 ## Microservices
@@ -103,8 +101,8 @@ These are the specific query endpoints available in the Query API:
 ### Local Deployment
 1. Clone the repository: `git clone https://github.com/DinukaGayashan/Tech-Scout.git`
 2. Navigate to the project directory: `cd Tech-Scout`
-3. Start each service using terminal commands: `./start_service.sh`
-4. Access the UI at `http://localhost:3000`
+3. Start the services using Makefiles: `make run-system`
+4. Access the UI at: `http://localhost:8080`
 
 ### Cloud Deployment
 1. Set up a VM in a cloud environment (AWS, GCP, Azure)
