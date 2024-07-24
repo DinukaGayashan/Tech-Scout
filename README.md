@@ -102,7 +102,8 @@ These are the specific query endpoints available in the Query API:
 1. Clone the repository: `git clone https://github.com/DinukaGayashan/Tech-Scout.git`
 2. Navigate to the project directory: `cd Tech-Scout`
 3. Start the services using Makefiles: `make run-system`
-4. Access the UI at: `http://localhost:8080`
+4. Access the UI at `http://localhost:8080` and with [Postman collection](https://github.com/DinukaGayashan/Tech-Scout/blob/82ad44eedc0ae9f8cf4465ee62a6c78db3e39b8f/Tech-Scout%20API.postman_collection.json)
+
 
 ### Cloud Deployment
 1. Set up a VM in a cloud environment (AWS, GCP, Azure)
