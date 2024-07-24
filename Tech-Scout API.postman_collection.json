@@ -1,0 +1,202 @@
+{
+	"info": {
+		"_postman_id": "5fddd8c6-156b-4792-b923-982ae375613c",
+		"name": "Tech-Scout API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21193270"
+	},
+	"item": [
+		{
+			"name": "Query by category",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/query/cpu",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"query",
+						"cpu"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query by category",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Intel Core i9-9900K\",\r\n    \"specs\": \"L2 cache 2MB\",\r\n    \"shops\": \"shop1\",\r\n    \"minPrice\": 399.99,\r\n    \"maxPrice\": 499.99\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/query/cpu",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"query",
+						"cpu"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query by price",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"minPrice\": 399.99,\r\n    \"maxPrice\": 499.99\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/query-by-price/cpu",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"query-by-price",
+						"cpu"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query by shop",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"shops\": \"shop1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/query-by-shop/cpu",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"query-by-shop",
+						"cpu"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query by spec",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"specs\": \"L2 cache 2MB\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/query-by-spec/cpu",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"query-by-spec",
+						"cpu"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query by name",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Intel Core i9-9900K\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/query-by-name/cpu",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"query-by-name",
+						"cpu"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
