@@ -106,12 +106,16 @@ func main() {
 	defer DB.Close()
 
 	router := gin.Default()
+	router.GET("status", func(c *gin.Context) {
+		c.String(http.StatusOK, "OK")
+	})
 	for _, category := range config.Categories {
 		router.GET("query/"+category, getItems)
 	}
-	router.GET("health", func(c *gin.Context) {
-		c.String(http.StatusOK, "OK")
-	})
+	router.GET("query-by-name/*category", getItems)
+	router.GET("query-by-spec/*category", getItems)
+	router.GET("query-by-shop/*category", getItems)
+	router.GET("query-by-price/*category", getItems)
 
 	router.Run("localhost:8001")
 }
